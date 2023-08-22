@@ -1,7 +1,7 @@
 let gameboard = (function() {
   let gameboardArray = ["", "", "", "", "", "", "", "", ""];
   let cells = document.querySelectorAll(".cell");
-
+  
   function displayGameboard() {
     gameboardArray.forEach(function(value, index) {
       cells[index].textContent = value;
@@ -16,6 +16,11 @@ let gameboard = (function() {
     }
   }
 
+  function clearGameboard() {
+    gameboardArray = ["", "", "", "", "", "", "", "", ""];
+    displayGameboard();
+  }
+
   cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
       addMarker(index, player1.marker);
@@ -27,9 +32,8 @@ let gameboard = (function() {
   });
 
   return {
-    gameboardArray: gameboardArray,
-    displayGameboard: displayGameboard,
-    addMarker: addMarker
+    displayGameboard,
+    init: clearGameboard
   };
 })();
 
@@ -43,10 +47,10 @@ let player1 = player("X");
 let player2 = player("O");
 
 let game = (function() {
-  function getGameboard(gameboard) {
-    let row1 = gameboard.slice(0, 3);
-    let row2 = gameboard.slice(3, 6);
-    let row3 = gameboard.slice(6);
+  function getGameboard(gamebrd) {
+    let row1 = gamebrd.slice(0, 3);
+    let row2 = gamebrd.slice(3, 6);
+    let row3 = gamebrd.slice(6);
     let rows = [row1, row2, row3];
     let col1 = [];
     let col2 = [];
@@ -56,25 +60,25 @@ let game = (function() {
     let diag2 = [];
     let diags = [diag1, diag2];
 
-    col1.push(gameboard[0]);
-    col1.push(gameboard[3]);
-    col1.push(gameboard[6]);
+    col1.push(gamebrd[0]);
+    col1.push(gamebrd[3]);
+    col1.push(gamebrd[6]);
 
-    col2.push(gameboard[1]);
-    col2.push(gameboard[4]);
-    col2.push(gameboard[7]);
+    col2.push(gamebrd[1]);
+    col2.push(gamebrd[4]);
+    col2.push(gamebrd[7]);
 
-    col3.push(gameboard[2]);
-    col3.push(gameboard[5]);
-    col3.push(gameboard[8]);
+    col3.push(gamebrd[2]);
+    col3.push(gamebrd[5]);
+    col3.push(gamebrd[8]);
 
-    diag1.push(gameboard[0]);
-    diag1.push(gameboard[4]);
-    diag1.push(gameboard[8]);
+    diag1.push(gamebrd[0]);
+    diag1.push(gamebrd[4]);
+    diag1.push(gamebrd[8]);
 
-    diag2.push(gameboard[2]);
-    diag2.push(gameboard[4]);
-    diag2.push(gameboard[6]);
+    diag2.push(gamebrd[2]);
+    diag2.push(gamebrd[4]);
+    diag2.push(gamebrd[6]);
 
     return [rows, cols, diags];
   }
@@ -83,27 +87,58 @@ let game = (function() {
     return (index === 0 || value === array[index - 1]) && value !== "";
   }
 
-  function checkWin(gameboard) {
-    let fixedGameboard = getGameboard(gameboard);
+  function checkWin(gamebrd) {
+    let fixedGameboard = getGameboard(gamebrd);
 
     for(i = 0; i < 3; i++) {
       if(fixedGameboard[0][i].every(compareArrayValues)) {
-        return 1;
+        if(fixedGameboard[0][i].every((value) => value === player1.marker)) {
+          alert("Player 1 wins!");
+          gameboard.init();
+          return;
+        }
+        else {
+          alert("Player 2 wins!");
+          gameboard.init();
+          return;
+        }
       }
       else if(fixedGameboard[1][i].every(compareArrayValues)) {
-        return 1;
+        if(fixedGameboard[1][i].every((value) => value === player1.marker)) {
+          alert("Player 1 wins!");
+          gameboard.init();
+          return;
+        }
+        else {
+          alert("Player 2 wins!");
+          gameboard.init();
+          return;
+        }
       }
     }
 
     for(i = 0; i < 2; i++) {
       if(fixedGameboard[2][i].every(compareArrayValues)) {
-        return 1;
+        if(fixedGameboard[2][i].every((value) => value === player1.marker)) {
+          alert("Player 1 wins!");
+          gameboard.init();
+          return;
+        }
+        else {
+          alert("Player 2 wins!");
+          gameboard.init();
+          return;
+        }
       }
     }
-    
-    if(gameboard.every((value) => value !== "")) {
-      return 2;
+
+    if(gamebrd.every((value) => value !== "")) {
+      alert("It's a tie!");
+      gameboard.init();
+      return;
     }
+
+    return;
   }
 
   return {
