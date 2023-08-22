@@ -12,7 +12,6 @@ let gameboard = (function() {
   function addMarker(position, marker) {
     if(gameboardArray[position] === "") {
       gameboardArray[position] = marker;
-      console.log(gameboardArray);
       displayGameboard();
     }
   }
@@ -77,8 +76,6 @@ let game = (function() {
     diag2.push(gameboard[4]);
     diag2.push(gameboard[6]);
 
-    console.log(rows, cols, diags);
-
     return [rows, cols, diags];
   }
 
@@ -91,16 +88,21 @@ let game = (function() {
 
     for(i = 0; i < 3; i++) {
       if(fixedGameboard[0][i].every(compareArrayValues)) {
-        return true;
+        return 1;
       }
       else if(fixedGameboard[1][i].every(compareArrayValues)) {
-        return true;
+        return 1;
       }
     }
+
     for(i = 0; i < 2; i++) {
       if(fixedGameboard[2][i].every(compareArrayValues)) {
-        return true;
+        return 1;
       }
+    }
+    
+    if(gameboard.every((value) => value !== "")) {
+      return 2;
     }
   }
 
